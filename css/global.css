@@ -168,6 +168,45 @@ div.movie-list div.poster-container button{
 }
 
 
+
+div.movie-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10%;
+  
+   
+}
+
+@media(min-width:768px) {
+    div.movie-details{
+        flex-direction: row;
+        gap: 2rem;  
+        padding: 2rem;
+        box-shadow: 0px 3px 4px 1px #B2B2B2;
+        margin: 5% 10% 5% 10%;
+    }
+}
+
+div.movie-info{
+    color:gray;
+    border-bottom: 1px dashed gray;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding-top: 40px;
+}
+
+
+div.movie-details img{
+   max-width: 300px;
+}
+
+
+div.movie-info h3{
+   text-transform: uppercase;
+}
+
+
 /* footer */
 footer {
     display: grid;

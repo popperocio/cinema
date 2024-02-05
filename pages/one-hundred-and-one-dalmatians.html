@@ -59,11 +59,68 @@
 
     <h1>One Hundred and One Dalmatians</h1>
     <div class="movie-details">
-        // Your html code
+        
     </div>
 </body>
-<script>
-    // Your api to get information here. Remember that the id of the movie is 'tt0055254'
+<script type="module">
+    import { get_movie } from '../javascript/get-movie.js';
+
+
+    const createImag = (movie) => {
+        const imag = movie.primaryImage.url
+        const alternativeText = movie.primaryImage.caption.plainText
+        const imgElement = document.createElement("img");
+        imgElement.src = imag
+        imgElement.alt = alternativeText
+        return imgElement  
+    }
+
+    get_movie("tt0055254").then((movie) => {
+        console.log(movie)
+        const details_container = document.createElement("div")
+        details_container.className = "movie-details-container"
+
+        const movie_name=movie.originalTitleText.text
+        const movie_genres=movie.genres.genres
+        const movie_sinopsis=movie.plot.plotText.plainText
+        const movie_duration=movie.runtime.seconds
+        createContainer(details_container,"movie-info","name", movie_name);
+        const movie_genres_obtained = []
+        for (const genre of movie.genres.genres) {
+            movie_genres_obtained.push(genre.text)  
+        }
+        createContainer(details_container,"movie-info","genres", movie_genres_obtained);
+        createContainer(details_container,"movie-info","sinopsis", movie_sinopsis);
+        createContainer(details_container,"movie-info","duration", secondsToHoursMinutes(movie_duration));
+
+        const element = document.getElementById("movie-details");
+        const imgElement = createImag(movie)
+        element.appendChild(imgElement)
+        element.appendChild(details_container);
+       
+    })
+
+    function secondsToHoursMinutes(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+    
+        return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+    }
+    function createContainer(container,className,labelText, textContent) {
+        const element = document.createElement("div");
+        element.className = className;
+
+        const label = document.createElement("h3");
+        label.textContent = labelText;
+        element.appendChild(label);
+
+        const content = document.createElement("p");
+        content.textContent = textContent;
+        element.appendChild(content);
+
+        container.appendChild(element);
+    }
+    
 </script>
 <footer>
     <div class="about-us">
