@@ -76,7 +76,6 @@
     }
 
     get_movie("tt0055254").then((movie) => {
-        console.log(movie)
         const details_container = document.createElement("div")
         details_container.className = "movie-details-container"
 
@@ -84,6 +83,7 @@
         const movie_genres=movie.genres.genres
         const movie_sinopsis=movie.plot.plotText.plainText
         const movie_duration=movie.runtime.seconds
+
         createContainer(details_container,"movie-info","name", movie_name);
         const movie_genres_obtained = []
         for (const genre of movie.genres.genres) {
@@ -106,6 +106,7 @@
     
         return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
     }
+    
     function createContainer(container,className,labelText, textContent) {
         const element = document.createElement("div");
         element.className = className;
