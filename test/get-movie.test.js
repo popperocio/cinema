@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { get_movie_by_id } from "../javascript/get-movie.js"
-import { mockedMovie } from "./mocked-movie.js";
+import { mockedMovie } from "./fixtures/mocked-movie.js";
 import { OPTIONS } from '../javascript/constants.js';
 
 
