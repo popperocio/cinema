@@ -4,15 +4,12 @@ import { mockedMovie } from "./mocked-movie.js";
 import { OPTIONS } from '../javascript/constants.js';
 
 
-afterEach(() => {
-    global.fetch.mockClear();
-    delete global.fetch;
-  });
-
 describe('movie by id service', () => {
   it('API call successful should return movie by id', async () => { 
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve(mockedMovie),
+      status: 200,
+      statusText: "OK"
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -20,18 +17,40 @@ describe('movie by id service', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(`https://moviesdatabase.p.rapidapi.com/titles/tt10872600?info=base_info`, OPTIONS);
-    // expect(movie).toEqual(mockedMovie);
+    expect(movie).toEqual(mockedMovie);
   });
 
-  it('API call throws error message when movie cannot be retrieved', async() =>{
-    const mockFetch = Promise.reject(new Error('Failed to fetch movie with ID tt10872600'));
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  it('API call returns null when movie does not exist', async() =>{
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(null),
+      status: 200,
+      statusText: "OK"
+    });
+      global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    const movie= await get_movie_by_id();
-    const expected_answer = 'Failed to fetch movie with ID tt10872600'
+      const movie = await get_movie_by_id("tt108726");
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    // expect(movie).toBe(expected_answer);
-});
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledWith(`https://moviesdatabase.p.rapidapi.com/titles/tt108726?info=base_info`, OPTIONS);
+      expect(movie).toEqual(null);
+       
+    }
+  );
+  
+  it('API call throws forbidden message when wrong API keys', async() =>{
+    const mockFetch = Promise.reject({
+      text: "Failed to fetch movie",
+      status: 403,
+      statusText: 'Forbidden'
+    });
+      global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
+      try {
+        await get_movie_by_id("tt10872600");
+      } catch (error) {
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(error).toBe(mockFetch.text);
+    }
+  });
 });
    
