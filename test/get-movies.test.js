@@ -7,7 +7,9 @@ import { API_URL, OPTIONS } from '../javascript/constants.js';
 describe('movies service', () => {
   it('API call successful should return movies list', async () => { 
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockedMovies),
+      text: () => Promise.resolve(mockedMovies),
+      status: 200,
+      statusText: "OK"
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -15,18 +17,23 @@ describe('movies service', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(API_URL, OPTIONS);
-    // expect(movies).toEqual(mockedMovies);
+    expect(movies).toEqual(JSON.parse(mockedMovies).results);
   });
 
-  it('API call throws error message when movies cannot be retrieved', async() =>{
-      const mockFetch = Promise.reject(new Error('Failed to fetch movies'));
+  it('API call throws error message when wrong API keys', async() =>{
+    const mockFetch = Promise.reject({
+      message: "You are not subscribed to this API",
+      status: 403,
+      statusText: 'Forbidden'
+    });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-      const movies = await get_movies();
-      const expected_answer = 'Failed to fetch movies'
-
-      expect(fetch).toHaveBeenCalledTimes(1);
-      // expect(movies).toBe(expected_answer);
+      try {
+        await get_movies();
+      } catch (error) {
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(error.message).toBe(mockFetch.message);
+    }
   });
 });
    
