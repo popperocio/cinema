@@ -58,13 +58,14 @@
     </div>
 
     <h1>One Hundred and One Dalmatians</h1>
-    <div class="movie-details">
+    <div class="movie-details" id="movie-details">
         
     </div>
 </body>
 <script type="module">
-    import { get_movie } from '../javascript/get-movie.js';
-
+    import { get_movie_by_id } from '../javascript/get-movie.js';
+    import { create_container } from "../javascript/create-container.js";
+    import { convert_seconds_to_hours_minutes } from "../javascript/convert-seconds-to-hours-and-mins.js";
 
     const createImag = (movie) => {
         const imag = movie.primaryImage.url
@@ -75,52 +76,30 @@
         return imgElement  
     }
 
-    get_movie("tt0055254").then((movie) => {
+    get_movie_by_id("tt0055254").then((movie) => {
         const details_container = document.createElement("div")
         details_container.className = "movie-details-container"
 
-        const movie_name=movie.originalTitleText.text
-        const movie_genres=movie.genres.genres
-        const movie_sinopsis=movie.plot.plotText.plainText
-        const movie_duration=movie.runtime.seconds
+        const movie_name=movie.results.originalTitleText.text
+        const movie_genres=movie.results.genres
+        const movie_sinopsis=movie.results.plot.plotText.plainText
+        const movie_duration=movie.results.runtime.seconds
 
-        createContainer(details_container,"movie-info","name", movie_name);
+        create_container(details_container,"movie-info","movie_name", movie_name);
         const movie_genres_obtained = []
-        for (const genre of movie.genres.genres) {
+        for (const genre of movie_genres.genres) {
             movie_genres_obtained.push(genre.text)  
         }
-        createContainer(details_container,"movie-info","genres", movie_genres_obtained);
-        createContainer(details_container,"movie-info","sinopsis", movie_sinopsis);
-        createContainer(details_container,"movie-info","duration", secondsToHoursMinutes(movie_duration));
+        create_container(details_container,"movie-info","movie_genres", movie_genres_obtained);
+        create_container(details_container,"movie-info","movie_sinopsis", movie_sinopsis);
+        create_container(details_container,"movie-info","movie_duration", convert_seconds_to_hours_minutes(movie_duration));
 
         const element = document.getElementById("movie-details");
-        const imgElement = createImag(movie)
+        const imgElement = createImag(movie.results)
         element.appendChild(imgElement)
         element.appendChild(details_container);
        
     })
-
-    function secondsToHoursMinutes(seconds) {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-    
-        return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-    }
-    
-    function createContainer(container,className,labelText, textContent) {
-        const element = document.createElement("div");
-        element.className = className;
-
-        const label = document.createElement("h3");
-        label.textContent = labelText;
-        element.appendChild(label);
-
-        const content = document.createElement("p");
-        content.textContent = textContent;
-        element.appendChild(content);
-
-        container.appendChild(element);
-    }
     
 </script>
 <footer>
