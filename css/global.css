@@ -191,11 +191,13 @@ div.movie-details{
 
 div.movie-info{
     color:gray;
-    border-bottom: 1px dashed gray;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    padding-top: 40px;
 }
 
+div.movie-info p{
+    border-bottom: 1px dashed gray;
+    padding-bottom: 20px;
+}
 
 div.movie-details img{
    max-width: 300px;
