@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/global.css"/>
     <title>Document</title>
-    <script src="../javascript/get-movies.js" type="module"></script>
-    <script src="../javascript/constants.js" type="module"></script>
+    <script src="../javascript/get-movie.js"></script>
+    <script src="../javascript/constants.js"></script>
 </head>
 <body>
     <header>
@@ -24,7 +24,7 @@
             </div>
         </nav>
         <nav class="shop-options">
-            <img class="logo" src="../resources/images/cinemark_logo.png" alt="Cinemark's logo" />
+            <img class="logo" src="../images/cinemark_logo.png" />
             <nav class="options">
                 <h3>Billboard</h3>
                 <h3>Theaters</h3>
@@ -35,9 +35,6 @@
     </header>
 
     <div class="banner">
-        <div class="banner-container">
-            <img src="../resources/images/banner.jpg" alt="banner">
-        </div>
         <button class="more-information">More Information</button>
     </div>
 
@@ -60,42 +57,52 @@
         </div>
     </div>
 
-    <h1>Billboard</h1>
-    <div class="movie-list" id="movie-list">
+    <h1>One Hundred and One Dalmatians</h1>
+    <div class="movie-details" id="movie-details">
+        <div class="movie-details-container">
+            <div class="movie-info"></div>
+        </div>
     </div>
 </body>
 <script type="module">
-    import { get_movies } from '../javascript/get-movies.js';
-   
+    import { get_movie_by_id } from '../javascript/get-movie.js';
+    import { create_information_elements } from "../javascript/create-information-elements.js";
+    import { convert_seconds_to_hours_minutes } from "../javascript/convert-seconds-to-hours-and-mins.js";
 
     const createImag = (movie) => {
         const imag = movie.primaryImage.url
         const alternativeText = movie.primaryImage.caption.plainText
         const imgElement = document.createElement("img");
+        imgElement.className="movie-img"
         imgElement.src = imag
         imgElement.alt = alternativeText
         return imgElement  
     }
 
-    get_movies()
-        .then((data) => {
-            data.map((movie) => {
-                const container = document.createElement("div")
-                container.className = "poster-container"
+    get_movie_by_id("tt0055254").then((movie) => {
+        const details_container = document.querySelector(".movie-info")
 
-                const imgElement = createImag(movie)
-                container.appendChild(imgElement)
+        const movie_name=movie.results.originalTitleText.text
+        const movie_genres=movie.results.genres
+        const movie_sinopsis=movie.results.plot.plotText.plainText
+        const movie_duration=movie.results.runtime.seconds
 
-                const buttonElement = document.createElement("button")
-                buttonElement.textContent = "View"
-                buttonElement.className = "schedules"
-                buttonElement.setAttribute('data-movie-id', movie.id)
-                container.appendChild(buttonElement)
+        create_information_elements(details_container,"name", movie_name);
+        const movie_genres_obtained = []
+        for (const genre of movie_genres.genres) {
+            movie_genres_obtained.push(genre.text)  
+        }
+        create_information_elements(details_container,"genres", movie_genres_obtained);
+        create_information_elements(details_container,"sinopsis", movie_sinopsis);
+        create_information_elements(details_container,"duration", convert_seconds_to_hours_minutes(movie_duration));
 
-                const element = document.getElementById("movie-list");
-                element.appendChild(container);
-            })
-        });
+        const element = document.getElementById("movie-details");
+        const imgElement = createImag(movie.results)
+        element.appendChild(imgElement)
+        element.appendChild(details_container);
+       
+    })
+    
 </script>
 <footer>
     <div class="about-us">

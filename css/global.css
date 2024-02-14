@@ -79,18 +79,42 @@ nav.options > h3 {
 /*banner */
 div.banner {
     display: flex;
-    height: 400px;
-    background-image: url("../resources/images/banner.jpg");
+    height: 100%;
     align-items: end;
+    position: relative;
+    max-height: 400px;
+}
+
+div.banner-container{
+    height: fit-content;
+    width: 100%;
+}
+
+div.banner-container img {
+    width: 100%;
 }
 
 button.more-information {
     margin-left: 10%;
     margin-bottom: 3%;
     background-color: darkred;
-    font-size: medium;
-}
+    font-size: smaller;
+    padding: 4px 6px; 
+    position: absolute;
+} 
 
+@media(min-width:576px){
+    button.more-information {
+        font-size: small;
+    } 
+    
+}
+@media(min-width:768px){
+    button.more-information {
+        font-size: large;     
+    } 
+    
+}
 
 /* City filter */
 div.filter {
@@ -165,6 +189,47 @@ div.movie-list div.poster-container button{
     width: 100%;
     background-color: darkred;
     border-color: darkred;
+}
+
+
+
+div.movie-details{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10%;
+  
+   
+}
+
+@media(min-width:768px) {
+    div.movie-details{
+        flex-direction: row;
+        gap: 2rem;  
+        padding: 2rem;
+        box-shadow: 0px 3px 4px 1px #B2B2B2;
+        margin: 5% 10% 5% 10%;
+    }
+}
+
+div.movie-info{
+    color:gray;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+div.movie-info p{
+    border-bottom: 1px dashed gray;
+    padding-bottom: 20px;
+}
+
+div.movie-details img{
+   max-width: 300px;
+}
+
+
+div.movie-info h3{
+   text-transform: uppercase;
 }
 
 

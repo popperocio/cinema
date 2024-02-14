@@ -6,6 +6,6 @@ export const get_movies = async() => {
     const result = await response.text();
     return JSON.parse(result).results;
   } catch (error) {
-    console.error(error);
+    throw error.message
   }
 }
